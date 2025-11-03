@@ -887,7 +887,7 @@
             opacity: 0.95;
         }
 
-        /* MEJORAS EN LA SECCIÓN DE FLYERS */
+        /* MEJORAS EN LA SECCIÓN DE FLYERS - OPTIMIZADA PARA RENDIMIENTO */
         .flyers {
             padding: 100px 5%;
             background: linear-gradient(180deg, #f8f9ff 0%, white 100%);
@@ -912,6 +912,10 @@
             width: 100%;
             scroll-snap-type: x mandatory;
             cursor: grab;
+            will-change: scroll-position;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000;
         }
 
         .flyer-scroll-container::-webkit-scrollbar {
@@ -934,6 +938,8 @@
             min-height: 0px;
             scroll-snap-align: center;
             position: relative;
+            transform: translateZ(0);
+            will-change: transform;
         }
 
         .flyer-card:hover {
@@ -952,7 +958,8 @@
             justify-content: center;
             position: relative;
             overflow: hidden;
-            background-color: #f5f5f5; /* Fondo gris claro para evitar el blanco puro */
+            background-color: #f5f5f5;
+            transform: translateZ(0);
         }
 
         .flyer-image::before {
@@ -1575,6 +1582,60 @@
             transform: rotate(90deg);
         }
 
+        /* NUEVO LOGO ANIMADO */
+        .logo-animado {
+            width: 50px;
+            height: 50px;
+            position: relative;
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        .logo-animado .logo-part {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF6B9D 0%, #FEC84D 100%);
+            box-shadow: 0 5px 15px rgba(255,107,157,0.4);
+        }
+
+        .logo-animado .logo-part-1 {
+            width: 30px;
+            height: 30px;
+            top: 5px;
+            left: 10px;
+            animation: logoPart1 2s ease-in-out infinite;
+        }
+
+        .logo-animado .logo-part-2 {
+            width: 20px;
+            height: 20px;
+            bottom: 5px;
+            right: 5px;
+            animation: logoPart2 2s ease-in-out infinite;
+        }
+
+        .logo-animado .logo-part-3 {
+            width: 15px;
+            height: 15px;
+            bottom: 15px;
+            left: 5px;
+            animation: logoPart3 2s ease-in-out infinite;
+        }
+
+        @keyframes logoPart1 {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(10deg); }
+        }
+
+        @keyframes logoPart2 {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(3px) rotate(-15deg); }
+        }
+
+        @keyframes logoPart3 {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-3px) rotate(5deg); }
+        }
+
         @media (max-width: 1024px) {
             .hero {
                 padding: 80px 5%;
@@ -2172,7 +2233,12 @@
 
     <header>
         <div class="logo-container" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-            <!-- Reemplaza el SVG por tu imagen PNG -->
+            <!-- NUEVO LOGO ANIMADO -->
+            <div class="logo-animado">
+                <div class="logo-part logo-part-1"></div>
+                <div class="logo-part logo-part-2"></div>
+                <div class="logo-part logo-part-3"></div>
+            </div>
             <div class="logo-text">Snacks</div>
         </div>
         <nav id="nav">
@@ -2634,7 +2700,7 @@
         window.addEventListener('load', function() {
             setTimeout(() => {
                 document.getElementById('loadingScreen').classList.add('hidden');
-            }, 1000); // Reducido para mayor velocidad
+            }, 800); // Reducido para mayor velocidad
             
             escribirPlaceholder();
             mostrarAnuncios();
@@ -2651,8 +2717,7 @@
                 '3.jpg',
                 '4.jpg',
                 '5.jpg',
-                '6.jpg',
-                'logo.png' // Agregar tu logo PNG aquí
+                '6.jpg'
             ];
             
             imagenes.forEach(src => {
@@ -2661,11 +2726,12 @@
             });
         }
 
+        // MEJORA CRÍTICA: Configuración optimizada para flyers
         function configurarFlyers() {
             const flyerScroll = document.getElementById('flyerScroll');
             const flyerCards = flyerScroll.querySelectorAll('.flyer-card');
             
-            // Configuración mejorada para scroll táctil fluido
+            // Configuración optimizada para scroll táctil fluido
             let isDown = false;
             let startX;
             let scrollLeft;
@@ -2674,7 +2740,7 @@
             let lastX;
             let lastTime;
 
-            // Eventos para mouse
+            // Eventos para mouse - optimizados
             flyerScroll.addEventListener('mousedown', (e) => {
                 isDown = true;
                 flyerScroll.classList.add('active');
@@ -2702,7 +2768,7 @@
                 if (!isDown) return;
                 e.preventDefault();
                 const x = e.pageX - flyerScroll.offsetLeft;
-                const walk = (x - startX) * 2; // Aumentado para mayor velocidad
+                const walk = (x - startX) * 2.5; // Aumentado para mayor velocidad
                 flyerScroll.scrollLeft = scrollLeft - walk;
                 
                 // Calcular velocidad para inercia
@@ -2737,7 +2803,7 @@
             flyerScroll.addEventListener('touchmove', (e) => {
                 if (!isDown) return;
                 const x = e.touches[0].pageX - flyerScroll.offsetLeft;
-                const walk = (x - startX) * 2; // Aumentado para mayor velocidad
+                const walk = (x - startX) * 2.5; // Aumentado para mayor velocidad
                 flyerScroll.scrollLeft = scrollLeft - walk;
                 
                 // Calcular velocidad para inercia
@@ -2757,19 +2823,19 @@
             // Permitir scroll con rueda del mouse horizontalmente
             flyerScroll.addEventListener('wheel', (e) => {
                 e.preventDefault();
-                flyerScroll.scrollLeft += e.deltaY * 2; // Aumentado para mayor velocidad
+                flyerScroll.scrollLeft += e.deltaY * 2.5; // Aumentado para mayor velocidad
             }, { passive: false });
 
-            // Función para aplicar inercia al soltar
+            // Función optimizada para aplicar inercia al soltar
             function aplicarInercia() {
                 if (Math.abs(velocity) < 0.1) return;
                 
-                const friction = 0.95;
-                const minVelocity = 0.1;
+                const friction = 0.92; // Reducido para más inercia
+                const minVelocity = 0.05;
                 
                 function animate() {
                     if (Math.abs(velocity) > minVelocity) {
-                        flyerScroll.scrollLeft -= velocity * 10;
+                        flyerScroll.scrollLeft -= velocity * 15; // Aumentado para más inercia
                         velocity *= friction;
                         animationFrame = requestAnimationFrame(animate);
                     }
@@ -2777,6 +2843,12 @@
                 
                 animationFrame = requestAnimationFrame(animate);
             }
+
+            // MEJORA: Aplicar transformaciones para aceleración GPU
+            flyerCards.forEach(card => {
+                card.style.transform = 'translateZ(0)';
+                card.style.willChange = 'transform';
+            });
         }
 
         function mostrarAnuncios() {
