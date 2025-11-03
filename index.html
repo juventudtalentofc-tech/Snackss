@@ -322,10 +322,11 @@
             cursor: pointer;
         }
 
-        .logo-svg {
+        .logo-image {
             width: 50px;
             height: 50px;
             animation: logoFloat 3s ease-in-out infinite;
+            object-fit: contain;
         }
 
         @keyframes logoFloat {
@@ -910,6 +911,10 @@
             -webkit-overflow-scrolling: touch;
             width: 100%;
             scroll-snap-type: x mandatory;
+            /* Mejora para scroll fluido en móviles */
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x mandatory;
+            scroll-padding: 0 20px;
         }
 
         .flyer-scroll-container::-webkit-scrollbar {
@@ -1940,7 +1945,7 @@
                 font-size: 20px;
             }
 
-            .logo-svg {
+            .logo-image {
                 width: 40px;
                 height: 40px;
             }
@@ -2166,19 +2171,7 @@
 
     <header>
         <div class="logo-container" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-            <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#FF6B9D;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#FEC84D;stop-opacity:1" />
-                    </linearGradient>
-                </defs>
-                <circle cx="50" cy="30" r="8" fill="url(#logoGradient)"/>
-                <circle cx="35" cy="35" r="6" fill="url(#logoGradient)"/>
-                <circle cx="65" cy="35" r="6" fill="url(#logoGradient)"/>
-                <path d="M 30 45 Q 50 25 70 45 L 75 75 Q 50 85 25 75 Z" fill="url(#logoGradient)"/>
-                <rect x="40" y="60" width="20" height="15" fill="#fff" opacity="0.8"/>
-            </svg>
+            <!-- Reemplaza el SVG por tu imagen PNG -->
             <div class="logo-text">Snacks</div>
         </div>
         <nav id="nav">
@@ -2657,7 +2650,8 @@
                 '3.jpg',
                 '4.jpg',
                 '5.jpg',
-                '6.jpg'
+                '6.jpg',
+                'logo.png' // Agregar tu logo PNG aquí
             ];
             
             imagenes.forEach(src => {
@@ -2670,11 +2664,12 @@
             const flyerScroll = document.getElementById('flyerScroll');
             const flyerCards = flyerScroll.querySelectorAll('.flyer-card');
             
-            // Agregar funcionalidad de desplazamiento táctil optimizada
+            // Configuración mejorada para scroll táctil fluido
             let isDown = false;
             let startX;
             let scrollLeft;
 
+            // Eventos para mouse
             flyerScroll.addEventListener('mousedown', (e) => {
                 isDown = true;
                 flyerScroll.classList.add('active');
@@ -2690,9 +2685,6 @@
             flyerScroll.addEventListener('mouseup', () => {
                 isDown = false;
                 flyerScroll.classList.remove('active');
-                
-                // Ajuste automático al centro del flyer más cercano
-                ajustarCentroFlyer();
             });
 
             flyerScroll.addEventListener('mousemove', (e) => {
@@ -2703,16 +2695,17 @@
                 flyerScroll.scrollLeft = scrollLeft - walk;
             });
 
-            // Para dispositivos táctiles
+            // Eventos para pantalla táctil - optimizados para mejor fluidez
             flyerScroll.addEventListener('touchstart', (e) => {
                 isDown = true;
                 startX = e.touches[0].pageX - flyerScroll.offsetLeft;
                 scrollLeft = flyerScroll.scrollLeft;
-            });
+                // Prevenir el comportamiento por defecto para mejor scroll
+                e.preventDefault();
+            }, { passive: false });
 
             flyerScroll.addEventListener('touchend', () => {
                 isDown = false;
-                ajustarCentroFlyer();
             });
 
             flyerScroll.addEventListener('touchmove', (e) => {
@@ -2720,41 +2713,14 @@
                 const x = e.touches[0].pageX - flyerScroll.offsetLeft;
                 const walk = (x - startX) * 3;
                 flyerScroll.scrollLeft = scrollLeft - walk;
-            });
+                e.preventDefault();
+            }, { passive: false });
 
-            // Función para ajustar el centro del flyer
-            function ajustarCentroFlyer() {
-                const scrollContainer = flyerScroll;
-                const cards = Array.from(flyerCards);
-                
-                // Encontrar el card más cercano al centro
-                const containerCenter = scrollContainer.scrollLeft + (scrollContainer.offsetWidth / 2);
-                
-                let closestCard = null;
-                let minDistance = Infinity;
-                
-                cards.forEach(card => {
-                    const cardCenter = card.offsetLeft + (card.offsetWidth / 2);
-                    const distance = Math.abs(containerCenter - cardCenter);
-                    
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        closestCard = card;
-                    }
-                });
-                
-                // Desplazar al card más cercano
-                if (closestCard) {
-                    const targetScroll = closestCard.offsetLeft - (scrollContainer.offsetWidth / 2) + (closestCard.offsetWidth / 2);
-                    scrollContainer.scrollTo({
-                        left: targetScroll,
-                        behavior: 'smooth'
-                    });
-                }
-            }
-            
-            // Ajustar automáticamente al cargar
-            setTimeout(ajustarCentroFlyer, 100);
+            // Permitir scroll con rueda del mouse horizontalmente
+            flyerScroll.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                flyerScroll.scrollLeft += e.deltaY;
+            }, { passive: false });
         }
 
         function mostrarAnuncios() {
