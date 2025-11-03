@@ -911,14 +911,15 @@
             -webkit-overflow-scrolling: touch;
             width: 100%;
             scroll-snap-type: x mandatory;
-            /* Mejora para scroll fluido en móviles */
-            -webkit-overflow-scrolling: touch;
-            scroll-snap-type: x mandatory;
-            scroll-padding: 0 20px;
+            cursor: grab;
         }
 
         .flyer-scroll-container::-webkit-scrollbar {
             display: none;
+        }
+
+        .flyer-scroll-container:active {
+            cursor: grabbing;
         }
 
         .flyer-card {
@@ -2605,27 +2606,27 @@
         const flyers = [
             {
                 imagen: '1.jpg',
-                
+                nombre: 'Paquete Algodon'
             },
             {
                 imagen: '2.jpg',
-                
+                nombre: 'Paquete Crispetera'
             },
             {
                 imagen: '3.jpg',
-                
+                nombre: 'Paquete Raspados'
             },
             {
                 imagen: '4.jpg',
-                
+                nombre: 'Paquete Obleas'
             },
             {
                 imagen: '5.jpg',
-                
+                nombre: 'Paquete Mini Perros'
             },
             {
                 imagen: '6.jpg',
-                
+                nombre: 'Paquete Fuente De Chocolate'
             }
         ];
 
@@ -2668,6 +2669,10 @@
             let isDown = false;
             let startX;
             let scrollLeft;
+            let velocity = 0;
+            let animationFrame;
+            let lastX;
+            let lastTime;
 
             // Eventos para mouse
             flyerScroll.addEventListener('mousedown', (e) => {
@@ -2675,24 +2680,42 @@
                 flyerScroll.classList.add('active');
                 startX = e.pageX - flyerScroll.offsetLeft;
                 scrollLeft = flyerScroll.scrollLeft;
+                velocity = 0;
+                lastX = e.pageX;
+                lastTime = performance.now();
+                cancelAnimationFrame(animationFrame);
             });
 
             flyerScroll.addEventListener('mouseleave', () => {
                 isDown = false;
                 flyerScroll.classList.remove('active');
+                aplicarInercia();
             });
 
             flyerScroll.addEventListener('mouseup', () => {
                 isDown = false;
                 flyerScroll.classList.remove('active');
+                aplicarInercia();
             });
 
             flyerScroll.addEventListener('mousemove', (e) => {
                 if (!isDown) return;
                 e.preventDefault();
                 const x = e.pageX - flyerScroll.offsetLeft;
-                const walk = (x - startX) * 3;
+                const walk = (x - startX) * 2; // Aumentado para mayor velocidad
                 flyerScroll.scrollLeft = scrollLeft - walk;
+                
+                // Calcular velocidad para inercia
+                const currentTime = performance.now();
+                const deltaX = e.pageX - lastX;
+                const deltaTime = currentTime - lastTime;
+                
+                if (deltaTime > 0) {
+                    velocity = deltaX / deltaTime;
+                }
+                
+                lastX = e.pageX;
+                lastTime = currentTime;
             });
 
             // Eventos para pantalla táctil - optimizados para mejor fluidez
@@ -2700,27 +2723,60 @@
                 isDown = true;
                 startX = e.touches[0].pageX - flyerScroll.offsetLeft;
                 scrollLeft = flyerScroll.scrollLeft;
-                // Prevenir el comportamiento por defecto para mejor scroll
-                e.preventDefault();
+                velocity = 0;
+                lastX = e.touches[0].pageX;
+                lastTime = performance.now();
+                cancelAnimationFrame(animationFrame);
             }, { passive: false });
 
             flyerScroll.addEventListener('touchend', () => {
                 isDown = false;
+                aplicarInercia();
             });
 
             flyerScroll.addEventListener('touchmove', (e) => {
                 if (!isDown) return;
                 const x = e.touches[0].pageX - flyerScroll.offsetLeft;
-                const walk = (x - startX) * 3;
+                const walk = (x - startX) * 2; // Aumentado para mayor velocidad
                 flyerScroll.scrollLeft = scrollLeft - walk;
+                
+                // Calcular velocidad para inercia
+                const currentTime = performance.now();
+                const deltaX = e.touches[0].pageX - lastX;
+                const deltaTime = currentTime - lastTime;
+                
+                if (deltaTime > 0) {
+                    velocity = deltaX / deltaTime;
+                }
+                
+                lastX = e.touches[0].pageX;
+                lastTime = currentTime;
                 e.preventDefault();
             }, { passive: false });
 
             // Permitir scroll con rueda del mouse horizontalmente
             flyerScroll.addEventListener('wheel', (e) => {
                 e.preventDefault();
-                flyerScroll.scrollLeft += e.deltaY;
+                flyerScroll.scrollLeft += e.deltaY * 2; // Aumentado para mayor velocidad
             }, { passive: false });
+
+            // Función para aplicar inercia al soltar
+            function aplicarInercia() {
+                if (Math.abs(velocity) < 0.1) return;
+                
+                const friction = 0.95;
+                const minVelocity = 0.1;
+                
+                function animate() {
+                    if (Math.abs(velocity) > minVelocity) {
+                        flyerScroll.scrollLeft -= velocity * 10;
+                        velocity *= friction;
+                        animationFrame = requestAnimationFrame(animate);
+                    }
+                }
+                
+                animationFrame = requestAnimationFrame(animate);
+            }
         }
 
         function mostrarAnuncios() {
