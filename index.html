@@ -21,6 +21,7 @@
             -webkit-text-size-adjust: 100%;
         }
 
+        /* Estilos optimizados para mejor rendimiento */
         .loading-screen {
             position: fixed;
             top: 0;
@@ -32,7 +33,7 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.5s, visibility 0.5s;
+            transition: opacity 0.3s, visibility 0.3s;
         }
 
         .loading-screen.hidden {
@@ -885,6 +886,7 @@
             opacity: 0.95;
         }
 
+        /* MEJORAS EN LA SECCIÓN DE FLYERS */
         .flyers {
             padding: 100px 5%;
             background: linear-gradient(180deg, #f8f9ff 0%, white 100%);
@@ -907,6 +909,7 @@
             -ms-overflow-style: none;
             -webkit-overflow-scrolling: touch;
             width: 100%;
+            scroll-snap-type: x mandatory;
         }
 
         .flyer-scroll-container::-webkit-scrollbar {
@@ -922,7 +925,9 @@
             cursor: pointer;
             flex: 0 0 auto;
             width: 320px;
-            min-height: 400px;
+            min-height: 0px;
+            scroll-snap-align: center;
+            position: relative;
         }
 
         .flyer-card:hover {
@@ -941,22 +946,52 @@
             justify-content: center;
             position: relative;
             overflow: hidden;
+            background-color: #f5f5f5; /* Fondo gris claro para evitar el blanco puro */
         }
 
         .flyer-image::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
-            animation: imageGlow 3s ease-in-out infinite;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.05) 100%);
+            z-index: 1;
         }
 
-        @keyframes imageGlow {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(-20%, -20%); }
+        .flyer-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            color: white;
+            padding: 20px;
+            z-index: 2;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .flyer-card:hover .flyer-info {
+            transform: translateY(0);
+        }
+
+        .flyer-info h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .flyer-info p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .flyer-price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #FEC84D;
         }
 
         .scroll-indicator {
@@ -1719,7 +1754,7 @@
             }
 
             .flyer-card {
-                width: 260px;
+                width: 181px;
             }
 
             .flyer-image {
@@ -2009,7 +2044,7 @@
             }
 
             .flyer-card {
-                width: 240px;
+                width: 181px;
             }
 
             .flyer-image {
@@ -2282,22 +2317,58 @@
         <div class="flyers-container">
             <div class="flyer-scroll-container" id="flyerScroll">
                 <div class="flyer-card" onclick="abrirFlyer(0)">
-                    <div class="flyer-image" style="background-image: url('1.jpg')"></div>
+                    <div class="flyer-image" style="background-image: url('1.jpg')">
+                        <div class="flyer-info">
+                            <h3>Paquete Cine en Casa</h3>
+                            <p>Crispetera ilimitada + Fuente de chocolate + Bebidas para 50 personas</p>
+                            <div class="flyer-price">$480.000</div>
+                        </div>
+                    </div>
                 </div>
                 <div class="flyer-card" onclick="abrirFlyer(1)">
-                    <div class="flyer-image" style="background-image: url('2.jpg')"></div>
+                    <div class="flyer-image" style="background-image: url('2.jpg')">
+                        <div class="flyer-info">
+                            <h3>Paquete Fiesta Total</h3>
+                            <p>Buffet completo + Mini hamburguesas + Raspados + Algodones</p>
+                            <div class="flyer-price">$850.000</div>
+                        </div>
+                    </div>
                 </div>
                 <div class="flyer-card" onclick="abrirFlyer(2)">
-                    <div class="flyer-image" style="background-image: url('3.jpg')"></div>
+                    <div class="flyer-image" style="background-image: url('3.jpg')">
+                        <div class="flyer-info">
+                            <h3>Paquete Dulce Tentación</h3>
+                            <p>Fuente de chocolate + Obleas + Algodones para 30 personas</p>
+                            <div class="flyer-price">$420.000</div>
+                        </div>
+                    </div>
                 </div>
                 <div class="flyer-card" onclick="abrirFlyer(3)">
-                    <div class="flyer-image" style="background-image: url('4.jpg')"></div>
+                    <div class="flyer-image" style="background-image: url('4.jpg')">
+                        <div class="flyer-info">
+                            <h3>Paquete Refrescante</h3>
+                            <p>Raspados + Algodones + Obleas para 40 personas</p>
+                            <div class="flyer-price">$350.000</div>
+                        </div>
+                    </div>
                 </div>
                 <div class="flyer-card" onclick="abrirFlyer(4)">
-                    <div class="flyer-image" style="background-image: url('5.jpg')"></div>
+                    <div class="flyer-image" style="background-image: url('5.jpg')">
+                        <div class="flyer-info">
+                            <h3>Paquete Salado</h3>
+                            <p>Mini perros + Crispetera + Pasabocas para 35 personas</p>
+                            <div class="flyer-price">$380.000</div>
+                        </div>
+                    </div>
                 </div>
                 <div class="flyer-card" onclick="abrirFlyer(5)">
-                    <div class="flyer-image" style="background-image: url('6.jpg')"></div>
+                    <div class="flyer-image" style="background-image: url('6.jpg')">
+                        <div class="flyer-info">
+                            <h3>Paquete Premium</h3>
+                            <p>Servicio completo: todos los snacks para 60 personas</p>
+                            <div class="flyer-price">$1.200.000</div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="scroll-indicator">
@@ -2432,6 +2503,7 @@
     </div>
 
     <script>
+        // Datos optimizados para mejor rendimiento
         const productos = {
             chocolate: {
                 icono: '🍫',
@@ -2540,56 +2612,65 @@
         const flyers = [
             {
                 imagen: '1.jpg',
-                nombre: 'Paquete Cine en Casa',
-                descripcion: 'Crispetera ilimitada + Fuente de chocolate + Bebidas para 50 personas',
-                precio: '$480.000'
+                
             },
             {
                 imagen: '2.jpg',
-                nombre: 'Paquete Fiesta Total',
-                descripcion: 'Buffet completo + Mini hamburguesas + Raspados + Algodones',
-                precio: '$850.000'
+                
             },
             {
                 imagen: '3.jpg',
-                nombre: 'Paquete Dulce Tentación',
-                descripcion: 'Fuente de chocolate + Obleas + Algodones para 30 personas',
-                precio: '$420.000'
+                
             },
             {
                 imagen: '4.jpg',
-                nombre: 'Paquete Refrescante',
-                descripcion: 'Raspados + Algodones + Obleas para 40 personas',
-                precio: '$350.000'
+                
             },
             {
                 imagen: '5.jpg',
-                nombre: 'Paquete Salado',
-                descripcion: 'Mini perros + Crispetera + Pasabocas para 35 personas',
-                precio: '$380.000'
+                
             },
             {
                 imagen: '6.jpg',
-                nombre: 'Paquete Premium',
-                descripcion: 'Servicio completo: todos los snacks para 60 personas',
-                precio: '$1.200.000'
+                
             }
         ];
 
+        // Carga optimizada
         window.addEventListener('load', function() {
             setTimeout(() => {
                 document.getElementById('loadingScreen').classList.add('hidden');
-            }, 1500); // Reducido de 2000 a 1500 ms
+            }, 1000); // Reducido para mayor velocidad
+            
             escribirPlaceholder();
             mostrarAnuncios();
             configurarFlyers();
+            
+            // Precarga de imágenes para mejor rendimiento
+            precargarImagenes();
         });
+
+        function precargarImagenes() {
+            const imagenes = [
+                '1.jpg',
+                '2.jpg',
+                '3.jpg',
+                '4.jpg',
+                '5.jpg',
+                '6.jpg'
+            ];
+            
+            imagenes.forEach(src => {
+                const img = new Image();
+                img.src = src;
+            });
+        }
 
         function configurarFlyers() {
             const flyerScroll = document.getElementById('flyerScroll');
             const flyerCards = flyerScroll.querySelectorAll('.flyer-card');
             
-            // Agregar funcionalidad de desplazamiento táctil
+            // Agregar funcionalidad de desplazamiento táctil optimizada
             let isDown = false;
             let startX;
             let scrollLeft;
@@ -2609,13 +2690,16 @@
             flyerScroll.addEventListener('mouseup', () => {
                 isDown = false;
                 flyerScroll.classList.remove('active');
+                
+                // Ajuste automático al centro del flyer más cercano
+                ajustarCentroFlyer();
             });
 
             flyerScroll.addEventListener('mousemove', (e) => {
                 if (!isDown) return;
                 e.preventDefault();
                 const x = e.pageX - flyerScroll.offsetLeft;
-                const walk = (x - startX) * 3; // Aumentado de 2 a 3 para mayor velocidad
+                const walk = (x - startX) * 3;
                 flyerScroll.scrollLeft = scrollLeft - walk;
             });
 
@@ -2628,14 +2712,49 @@
 
             flyerScroll.addEventListener('touchend', () => {
                 isDown = false;
+                ajustarCentroFlyer();
             });
 
             flyerScroll.addEventListener('touchmove', (e) => {
                 if (!isDown) return;
                 const x = e.touches[0].pageX - flyerScroll.offsetLeft;
-                const walk = (x - startX) * 3; // Aumentado de 2 a 3 para mayor velocidad
+                const walk = (x - startX) * 3;
                 flyerScroll.scrollLeft = scrollLeft - walk;
             });
+
+            // Función para ajustar el centro del flyer
+            function ajustarCentroFlyer() {
+                const scrollContainer = flyerScroll;
+                const cards = Array.from(flyerCards);
+                
+                // Encontrar el card más cercano al centro
+                const containerCenter = scrollContainer.scrollLeft + (scrollContainer.offsetWidth / 2);
+                
+                let closestCard = null;
+                let minDistance = Infinity;
+                
+                cards.forEach(card => {
+                    const cardCenter = card.offsetLeft + (card.offsetWidth / 2);
+                    const distance = Math.abs(containerCenter - cardCenter);
+                    
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestCard = card;
+                    }
+                });
+                
+                // Desplazar al card más cercano
+                if (closestCard) {
+                    const targetScroll = closestCard.offsetLeft - (scrollContainer.offsetWidth / 2) + (closestCard.offsetWidth / 2);
+                    scrollContainer.scrollTo({
+                        left: targetScroll,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+            
+            // Ajustar automáticamente al cargar
+            setTimeout(ajustarCentroFlyer, 100);
         }
 
         function mostrarAnuncios() {
@@ -2865,6 +2984,7 @@
             });
         });
 
+        // Optimización de animaciones para mejor rendimiento
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -100px 0px'
@@ -2889,6 +3009,7 @@
             });
         });
 
+        // Control de modales para evitar scroll no deseado
         const modales = document.querySelectorAll('.modal, .search-results, .flyer-fullscreen');
         modales.forEach(modal => {
             const modalObserver = new MutationObserver(function(mutations) {
@@ -2907,6 +3028,7 @@
             });
         });
 
+        // Easter egg - confetti al hacer triple click en el logo
         let clickCount = 0;
         let clickTimer = null;
 
@@ -2956,7 +3078,7 @@
             }
         }
 
-        // Prevenir zoom en dispositivos móviles
+        // Prevenir zoom en dispositivos móviles para mejor experiencia
         document.addEventListener('touchmove', function(e) {
             if (e.touches.length > 1) e.preventDefault();
         }, { passive: false });
