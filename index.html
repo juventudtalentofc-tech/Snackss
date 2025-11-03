@@ -906,6 +906,7 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
             -webkit-overflow-scrolling: touch;
+            width: 100%;
         }
 
         .flyer-scroll-container::-webkit-scrollbar {
@@ -934,6 +935,7 @@
             height: 400px;
             background-size: cover;
             background-position: center;
+            background-repeat: no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -2280,22 +2282,22 @@
         <div class="flyers-container">
             <div class="flyer-scroll-container" id="flyerScroll">
                 <div class="flyer-card" onclick="abrirFlyer(0)">
-                    <div class="flyer-image" style="background-image: url('1.jpg')"></div>
+                    <div class="flyer-image" style="background-image: url('https://via.placeholder.com/320x400/FF6B9D/FFFFFF?text=Flyer+1')"></div>
                 </div>
                 <div class="flyer-card" onclick="abrirFlyer(1)">
-                    <div class="flyer-image" style="background-image: url('2.jpg')"></div>
+                    <div class="flyer-image" style="background-image: url('https://via.placeholder.com/320x400/FEC84D/FFFFFF?text=Flyer+2')"></div>
                 </div>
                 <div class="flyer-card" onclick="abrirFlyer(2)">
-                    <div class="flyer-image" style="background-image: url('3.jpg')"></div>
+                    <div class="flyer-image" style="background-image: url('https://via.placeholder.com/320x400/667eea/FFFFFF?text=Flyer+3')"></div>
                 </div>
                 <div class="flyer-card" onclick="abrirFlyer(3)">
-                    <div class="flyer-image" style="background-image: url('4.jpg')"></div>
+                    <div class="flyer-image" style="background-image: url('https://via.placeholder.com/320x400/764ba2/FFFFFF?text=Flyer+4')"></div>
                 </div>
                 <div class="flyer-card" onclick="abrirFlyer(4)">
-                    <div class="flyer-image" style="background-image: url('5.jpg')"></div>
+                    <div class="flyer-image" style="background-image: url('https://via.placeholder.com/320x400/25D366/FFFFFF?text=Flyer+5')"></div>
                 </div>
                 <div class="flyer-card" onclick="abrirFlyer(5)">
-                    <div class="flyer-image" style="background-image: url('6.jpg')"></div>
+                    <div class="flyer-image" style="background-image: url('https://via.placeholder.com/320x400/FF5252/FFFFFF?text=Flyer+6')"></div>
                 </div>
             </div>
             <div class="scroll-indicator">
@@ -2398,7 +2400,7 @@
                 <a href="#servicios">✨ Servicios</a>
                 <a href="#paquetes">📦 Flyers</a>
                 <a href="#testimonios">💬 Testimonios</a>
-                <a href="#contacto">📱 Contacto</a>
+                    <a href="#contacto">📱 Contacto</a>
             </div>
             <div class="footer-section">
                 <h3>Servicios</h3>
@@ -2537,37 +2539,37 @@
 
         const flyers = [
             {
-                imagen: '1.jpg',
+                imagen: 'https://via.placeholder.com/800x1000/FF6B9D/FFFFFF?text=Paquete+Cine+en+Casa',
                 nombre: 'Paquete Cine en Casa',
                 descripcion: 'Crispetera ilimitada + Fuente de chocolate + Bebidas para 50 personas',
                 precio: '$480.000'
             },
             {
-                imagen: '2.jpg',
+                imagen: 'https://via.placeholder.com/800x1000/FEC84D/FFFFFF?text=Paquete+Fiesta+Total',
                 nombre: 'Paquete Fiesta Total',
                 descripcion: 'Buffet completo + Mini hamburguesas + Raspados + Algodones',
                 precio: '$850.000'
             },
             {
-                imagen: '/img/3.jpg',
+                imagen: 'https://via.placeholder.com/800x1000/667eea/FFFFFF?text=Paquete+Dulce+Tentación',
                 nombre: 'Paquete Dulce Tentación',
                 descripcion: 'Fuente de chocolate + Obleas + Algodones para 30 personas',
                 precio: '$420.000'
             },
             {
-                imagen: '/img/4.jpg',
+                imagen: 'https://via.placeholder.com/800x1000/764ba2/FFFFFF?text=Paquete+Refrescante',
                 nombre: 'Paquete Refrescante',
                 descripcion: 'Raspados + Algodones + Obleas para 40 personas',
                 precio: '$350.000'
             },
             {
-                imagen: '/img/5.jpg',
+                imagen: 'https://via.placeholder.com/800x1000/25D366/FFFFFF?text=Paquete+Salado',
                 nombre: 'Paquete Salado',
                 descripcion: 'Mini perros + Crispetera + Pasabocas para 35 personas',
                 precio: '$380.000'
             },
             {
-                imagen: '/img/6.jpg',
+                imagen: 'https://via.placeholder.com/800x1000/FF5252/FFFFFF?text=Paquete+Premium',
                 nombre: 'Paquete Premium',
                 descripcion: 'Servicio completo: todos los snacks para 60 personas',
                 precio: '$1.200.000'
@@ -2586,9 +2588,6 @@
         function configurarFlyers() {
             const flyerScroll = document.getElementById('flyerScroll');
             const flyerCards = flyerScroll.querySelectorAll('.flyer-card');
-            
-            // Ajustar el ancho del contenedor para que se pueda desplazar
-            flyerScroll.style.width = `${flyerCards.length * 340}px`;
             
             // Agregar funcionalidad de desplazamiento táctil
             let isDown = false;
